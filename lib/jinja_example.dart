@@ -1,6 +1,3 @@
-/// jinja_example
-///
-/// A Aqueduct web server.
 library jinja_example;
 
 export 'dart:async';
