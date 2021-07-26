@@ -1,6 +1,6 @@
 name: jinja_conduit
 description: Jinja Conduit example.
-version: 1.0.0
+version: 1.0.1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -10,6 +10,7 @@ dependencies:
   jinja: ^0.4.0-0
 
 # dev.
-dependency_overrides:
-  jinja:
-    path: ../jinja
+#
+# dependency_overrides:
+#   jinja:
+#     path: ../jinja
