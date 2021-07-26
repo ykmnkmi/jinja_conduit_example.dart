@@ -1,12 +1,11 @@
-import 'package:jinja_example/jinja_example.dart';
+import 'package:jinja_conduit/jinja_conduit.dart';
 
 Future main() async {
   final app = Application<JinjaExampleChannel>()
     ..options.configurationFilePath = "config.yaml"
-    ..options.port = 8888;
+    ..options.port = 8080;
 
   await app.startOnCurrentIsolate();
-
   print("Application started on port: ${app.options.port}.");
   print("Use Ctrl-C (SIGINT) to stop running the application.");
 }

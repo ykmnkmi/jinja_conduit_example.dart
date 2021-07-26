@@ -1,33 +1,37 @@
-import 'jinja_example.dart';
+import 'jinja_conduit.dart';
 
 class JinjaExampleChannel extends ApplicationChannel {
-  Environment environment;
+  late Environment environment;
 
   @override
-  Future prepare() async {
-    logger.onRecord.listen((rec) => print("$rec ${rec.error ?? ""} ${rec.stackTrace ?? ""}"));
+  Future<void> prepare() async {
+    logger.onRecord.listen((rec) {
+      print("$rec ${rec.error ?? ""} ${rec.stackTrace ?? ""}");
+    });
 
     environment = Environment(
-        loader: FileSystemLoader(path: './views', autoReload: true), leftStripBlocks: true, trimBlocks: true);
+      autoReload: true,
+      loader: FileSystemLoader(path: './views'),
+      leftStripBlocks: true,
+      trimBlocks: true,
+    );
+  }
+
+  Template get indexTemplate {
+    return environment.getTemplate('index.html');
+  }
+
+  Template get userTemplate {
+    return environment.getTemplate('user.html');
   }
 
   @override
   Controller get entryPoint {
-    final router = Router();
+    final headers = {HttpHeaders.contentTypeHeader: 'text/html; charset=utf-8'};
 
-    router.route('/').linkFunction((request) async {
-      return Response.ok(environment.getTemplate('index.html').render(), headers: {
-        HttpHeaders.contentTypeHeader: 'text/html; charset=utf-8',
-      });
-    });
-
-    router.route('/user/:name').linkFunction((request) async {
-      final String name = request.path.variables['name'];
-      return Response.ok(environment.getTemplate('user.html').render(name: name), headers: {
-        HttpHeaders.contentTypeHeader: 'text/html; charset=utf-8',
-      });
-    });
-
-    return router;
+    return Router()
+      ..route('/').linkFunction((request) => Response.ok(indexTemplate.render(), headers: headers))
+      ..route('/user/:name').linkFunction(
+          (request) => Response.ok(userTemplate.render({'name': request.path.variables['name']}), headers: headers));
   }
 }
